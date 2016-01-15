@@ -1,0 +1,52 @@
+import urllib
+import urllib2
+import httplib
+import sys
+import os
+import time
+import datetime
+import calendar
+import re
+import csv
+import math
+import random
+from numpy import genfromtxt
+import pandas as pd
+
+SPX500_path = os.path.join('X:\CB\Rob\Company class with FS','SPX500_list.xlsx')
+tickers = genfromtxt((pd.read_excel(SPX500_path)['Ticker symbol']), dtype= 'str', delimiter = '\n').tolist()
+
+SEC_path = os.path.join('X:\CB\Rob\Company class with FS\stock-miner-master','stock-list.txt')
+tickers2 = genfromtxt(SEC_path, dtype = 'str', delimiter = '\n').tolist()
+
+matchingTickers = sorted(list(set(tickers).intersection(tickers2)))
+len(matchingTickers)
+
+df = pd.read_excel(SPX500_path)
+df1 = df[df['Ticker symbol'].isin(matchingTickers)]
+df1 = df1.ix[:,[0,1,3,4,7]]
+
+df1.columns = ['Ticker symbol','Security','GICS Industry','GICS Sub Industry','CIK']
+df1.reset_index(inplace = True, drop=True)
+
+stocks = list(df1[['Ticker symbol']].values.flatten())
+names = list(df1[['Security']].values.flatten())
+industry = list(df1[['GICS Industry']].values.flatten())
+industrySub = list(df1[['GICS Sub Industry']].values.flatten())
+CIK = list(df1[['CIK']].values.flatten())
+
+#save directories
+directory = os.path.join('X:\CB\Rob\Company class with FS', 'DATA/')
+if not os.path.exists(directory):
+    os.makedirs(directory)
+    os.makedirs(directory + 'Historical')
+    os.makedirs(directory + 'Daily')
+    os.makedirs(directory + 'Intraday')
+    os.makedirs(directory + 'Filings')
+    os.makedirs(directory + '10-K')
+    os.makedirs(directory + '10-Q')
+
+10Q for 66740
+    http://www.sec.gov/cgi-bin/browse-edgar?CIK=66740&owner=exclude&action=getcompany&Find=Search
+    http://www.sec.gov/Archives/edgar/data/66740/000155837015002024/0001558370-15-002024-index.htm
+    http://www.sec.gov/Archives/edgar/data/66740/000155837015002024/mmm-20150930x10q.htm
