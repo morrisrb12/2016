@@ -1,0 +1,100 @@
+from __future__ import unicode_literals, division
+
+import IPython
+import warnings
+import requests
+import numpy as np
+import pandas as pd
+import seaborn as sns
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+
+from pylab import *
+from IPython.display import HTML
+from IPython.display import display as prnt
+
+# Matplotlib in notebook
+%matplotlib inline
+
+# Notebook Options
+warnings.filterwarnings('ignore')
+np.set_printoptions(suppress=True)
+
+# Matplotlib Styles
+c = {'axes.labelsize': 17,
+'axes.titlesize': 16,
+'figure.figsize': [18, 8],
+'grid.linewidth': 1.6,
+'legend.fontsize': 17,
+'lines.linewidth': 2,
+'lines.markeredgewidth': 0.0,
+'lines.markersize': 11,
+'patch.linewidth': 0.5,
+'xtick.labelsize': 16,
+'xtick.major.pad': 20,
+'xtick.major.width': 2,
+'xtick.minor.width': 1,
+'ytick.labelsize': 16.0,
+'ytick.major.pad': 20,
+'ytick.major.width': 2,
+'ytick.minor.width': 1 }
+wide_c = dict(c, **{'figure.figsize':[20,8]})
+
+def table(df,replace_match="",replace_str=""):
+    return IPython.display.display(HTML(df.to_html().replace('<table border="1" class="dataframe">','<table class="table table-striped table-hover">').replace(replace_match,replace_str)))
+    
+    LCDict = 'LCDataDictionary.xlsx'
+LC0711 = 'LoanStats3a.csv'
+LC1213 = 'LoanStats3b.csv'
+LC1314 = 'LoanStats3c.csv'
+LC1415 = 'LoanStats3d.csv'
+
+path = '../Final_Project'
+filename = LC0711
+
+filepath = os.path.join(path,filename)
+if os.path.exists(filepath):
+    df = pd.read_csv(os.path.join(path,filename), header = 1)
+
+drops0711 = ['member_id', 'id','funded_amnt','funded_amnt_inv','dti_joint','annual_inc_joint','application_type','verification_status_joint','emp_title','loan_status','pymnt_plan','url','title','zip_code','addr_state','revol_util','out_prncp','out_prncp_inv','total_pymnt','total_pymnt_inv','total_rec_int','total_rec_late_fee','total_rec_prncp','recoveries','collection_recovery_fee','last_pymnt_d','last_pymnt_amnt','next_pymnt_d','last_credit_pull_d','policy_code','installment','grade','sub_grade']
+
+#checking that wtv we drop is actually in the list of columns
+column_list = []
+for column in df.columns:
+    column_list.append(column)
+
+for x in drops0711:
+    if x not in column_list: print x
+  
+df1 = df.drop(drops0711, axis = 1)
+df1.dropna(how = 'all', inplace=True)
+
+#df1[df1['annual_inc'] is NULL]
+pd.isnull(df1['annual_inc'] == True)
+
+#Drop all applications for which applciation type != INDIVIDUAL
+#then drop application_type columns
+
+# emp_length, need ot make into dummies
+
+# with desc, just  turn into a binary if there is anything or not
+
+# earliest_cr_line: change into a number
+
+#think about changing these ones 
+#mths_since_last_delinq
+#mths_since_last_major_derog - this only becomes significant later and is empty in 0711
+#mths_since_last_record
+
+#total_acc and open_acc may have some type of corr
+
+# initial_list_status needs to be a dummy W is for full investment only and F is for fractional
+
+#thingk about dropping one of these:
+open_acc_6m
+open_il_6m
+open_il_12m
+open_il_24m
+
+#issued_d is somethign that comes up later
+df1.describe()
