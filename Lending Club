@@ -43,7 +43,7 @@ wide_c = dict(c, **{'figure.figsize':[20,8]})
 def table(df,replace_match="",replace_str=""):
     return IPython.display.display(HTML(df.to_html().replace('<table border="1" class="dataframe">','<table class="table table-striped table-hover">').replace(replace_match,replace_str)))
     
-    LCDict = 'LCDataDictionary.xlsx'
+LCDict = 'LCDataDictionary.xlsx'
 LC0711 = 'LoanStats3a.csv'
 LC1213 = 'LoanStats3b.csv'
 LC1314 = 'LoanStats3c.csv'
